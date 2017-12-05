@@ -1,0 +1,77 @@
+{
+  "name": "request-validation",
+  "version": "0.0.1",
+  "author": "Rafa Mel",
+  "description": "Express.js middleware for modular Joi request validations.",
+  "homepage": "https://github.com/rafamel/request-validation",
+  "main": "./lib/index",
+  "scripts": {
+    "lint": "eslint ./lib --ext .js",
+    "lint:test": "eslint ./test --ext .js",
+    "lint:md": "markdownlint *.md --config markdown.json",
+    "test": "npm run lint:test && jest ./test/.*.test.js --runInBand --verbose",
+    "watch": "nodemon ./node_modules/.bin/run-s lint test",
+    "checks": "run-s lint lint:* && jest ./test/.*.test.js && npm outdated",
+    "prepublishOnly": "npm run checks",
+    "update:packages": "rm -rf node_modules && rm package-lock.json && npm update --save/save-dev && npm install && npm outdated"
+  },
+  "contributors": [
+    {
+      "name": "Rafa Mel"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rafamel/request-validation"
+  },
+  "license": "MIT",
+  "keywords": [
+    "joi",
+    "express",
+    "validation",
+    "validator",
+    "validate",
+    "middleware",
+    "request",
+    "modular",
+    "schema"
+  ],
+  "bugs": {
+    "url": "https://github.com/rafamel/request-validation/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/rafamel/request-validation/raw/master/LICENSE"
+    }
+  ],
+  "devDependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "coveralls": "^3.0.0",
+    "eslint": "^4.11.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jest": "^21.3.2",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "express": "^4.16.2",
+    "jest-cli": "^21.2.1",
+    "markdownlint-cli": "^0.5.0",
+    "nodemon": "^1.12.1",
+    "npm-run-all": "^4.1.1",
+    "supertest": "^3.0.0"
+  },
+  "dependencies": {
+    "joi": "^13.0.2",
+    "lodash.merge": "^4.6.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true
+  }
+}
