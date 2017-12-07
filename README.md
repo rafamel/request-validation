@@ -63,3 +63,97 @@ For `const RequestValidation = require('request-validation');`, `RequestValidati
     - `options` (optional): *Object.* [*Joi* options](https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-callback) to use for all validation within this `RequestValidation`.
 
 - Returns
+
+
+```javascript
+schema.use('params.body') // exclusive
+schema.use('params').use.body('username', 'password')
+
+schema.skip('params', 'username')
+schema.skip({ body: ['username', 'password'] })
+
+schema.add({ // if it exists, it will add
+    body: {
+        someOther: Joi.papapapa
+    }
+})
+
+schema.replace({ // if it exists, it will replace
+    body: {
+        someOther: Joi.papapapa
+    }
+})
+
+schema.joi((v) => {
+    v // joi
+})
+
+```
+
+
+```javascript
+const router = require('express').Router();
+const Joi = require('joi');
+const user = require('./myUserController');
+const RequestValidation = require('request-validation');
+
+const myValidation = new RequestValidation({
+    schema: {
+        body: {
+            username: Joi
+                .min(6).max(16)
+                .regex(/^[a-zA-Z0-9_]+$/)
+                .label('Username'),
+            password: Joi.string()
+                .min(8).max(20)
+                .regex(/^[a-zA-Z0-9_]+$/)
+                .label('Password'),
+            email: Joi.string().email().label('Email')
+        },
+        params: {
+            userId: Joi.number().integer().positive()
+                .options({ convert: true }),
+            refreshToken: Joi.string()
+        }
+    },
+
+    routes: (schema) => ({
+        create: schema
+            .skip('params'),
+        login: schema
+            .skip('params')
+            .body('username', 'password'),
+        refresh: schema
+            .skip('body')
+            .headers({
+                authorization: Joi.string()
+            }),
+        update: schema
+            .skip('params.refreshToken')
+            .add({
+                body: {
+
+                }
+            })
+            .body(() => {
+                this.options({ presence: 'optional' })
+            }),
+        patch: {
+            body: schema.body.joi()
+                .options({ presence: 'optional' }),
+            params: Object.assign({},
+                schema.params('userId').params,
+
+        }
+    }),
+    options: {
+        default: { presence: 'required' }
+    }
+});
+
+// Add validation middleware to each route
+router.post('/user/register', myValidation.create, user.create);
+router.post('/user', myValidation.login, myController.login);
+router.get('/user/:id/:refreshToken', myValidation.refresh, myController.refresh);
+router.patch('/myRoute', myValidation.patch, myController.patch);
+```

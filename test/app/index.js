@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json()); // Body parser
 
 // Routes
-app.use(router);
+app.use(router, (req, res, next) => { next('passed'); });
 
 // 404
 app.use((req, res, next) => {
@@ -27,6 +27,7 @@ app.use((data, req, res, next) => {
         return res.status(status)
             .json({
                 status: 'error',
+                statusCode: status,
                 error: data.message
             });
     }
@@ -39,6 +40,6 @@ app.use((data, req, res, next) => {
         });
 });
 
-app.listen(3000, () => {
+module.exports = app.listen(3000, () => {
     console.log('Server running on port', 3000);
 });
