@@ -50,7 +50,7 @@
     "cookie-parser": "^1.4.3",
     "coveralls": "^3.0.0",
     "eslint": "^4.11.0",
-    "eslint-config-standard": "^10.2.1",
+    "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jest": "^21.3.2",
     "eslint-plugin-node": "^5.2.1",
@@ -75,6 +75,9 @@
   "jest": {
     "testEnvironment": "node",
     "collectCoverage": true,
+    "collectCoverageFrom": [
+      "lib/**/*.{js,jsx}"
+    ],
     "coveragePathIgnorePatterns": [
       "<rootDir>/test/"
     ]
