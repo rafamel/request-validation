@@ -16,6 +16,8 @@
 - Customize your error catching.
 - Customize the *Joi* options for the validations.
 
+[Check out here a full setup example - *joi-add* included](#full-setup-example)
+
 ## Install
 
 [`npm install request-validation`](https://www.npmjs.com/package/request-validation)
@@ -215,7 +217,7 @@ It's totally up to you to adopt a more explicit style declaring the fields to us
 
 ### Methods
 
-`ValidationSchema` methods don't mutate the base schema object. They're chainable and cumulative, and won't execute or build the Joi validations themselves until the [`.schema` property](#build-properties) is called (either manually by you or automatically when used in any `RequestValidation` route); then, they're called sequentially, in the order they were defined on.
+`ValidationSchema` methods don't mutate the base schema object. They're chainable and cumulative, and won't execute or build the Joi validations themselves until the [`.schema` property](#properties) is called (either manually by you or automatically when used in any `RequestValidation` route); then, they're called sequentially, in the order they were defined on.
 
 #### Aliases
 
@@ -278,9 +280,9 @@ Be careful, as all inner keys of any selected property will be included. As an e
 
 #### `schema.skip(standardKeyPath)`
 
-It will remove properties from a schema.
+It will remove properties from a schema. [It's aliased for each request property.](#aliases)
 
-- `standardKeyPath`: The paths for the keys to skip as any of the [standard key path arguments.](#standard-key-path-arguments) [It's aliased for each request property.](#aliases)
+- `standardKeyPath`: The paths for the keys to skip as any of the [standard key path arguments.](#standard-key-path-arguments)
 
 All these would be equivalent and remove keys `'password'` and `'email'` from the schema `'body'`:
 
@@ -440,6 +442,8 @@ schema.body;
 
 ## Full Setup Example
 
+We're also using [*joi-add*](https://github.com/rafamel/joi-add) here for some extra flexibility:
+
 ### `app.js`
 
 ```javascript
@@ -447,18 +451,30 @@ schema.body;
 const express = require('express');
 const rv = require('request-validation');
 
-// Set global options and error handler
+// Pass Joi to joi-add (so we don't further have to)
+const baseJoi = require('joi');
+require('joi-add')(baseJoi);
+
+// Set request-validation global options (if needed)
 rv.options({
     params: { presence: required }
 });
 
+// Set request-validation error handler (if needed)
 rv.handler((err, req, res, next) => {
-    // If it's not a Joi error, sent to app error handler
+    // If it's not a Joi error, send to global error handler
     if (!err.isJoi) return next(err);
-    // Only show Joi innermost message from the error array
+    // Show Joi innermost message from the error array as message
+    // if it's a joi-add exmplicitly set message or label,
+    // otherwise, show 'Bad Request'
+    const details = err.details[0];
+    const message = (details.context.isExplicit || details.context.addLabel)
+        ? details.message
+        : 'Bad Request';
     res.status(400).json({
         status: 'error',
-        message: err.details[0].message;
+        message: message,
+        full: err.message
     });
 });
 
@@ -502,7 +518,7 @@ module.exports = router;
 ### `user.validation.js`
 
 ```javascript
-const Joi = require('joi');
+const Joi = require('joi-add')();
 const { ValidationSchema, RequestValidation } = require('request-validation');
 
 module.exports = {
@@ -510,15 +526,17 @@ module.exports = {
         body: {
             username: Joi.string()
                 .min(4).max(16)
-                .regex(/^[a-zA-Z0-9_]+$/)
-                .label('Username'),
+                .add((it) => it.regex(/^[a-zA-Z0-9_]+$/),
+                    'Username should only contain letters, numbers, and underscores (_).')
+                .addLabel('Username'),
             password: Joi.string()
                 .min(8).max(20)
-                .regex(/^[a-zA-Z0-9_]+$/)
-                .label('Password'),
+                .add((it) => it.regex(/^[a-zA-Z0-9_]+$/),
+                    'Password should only contain letters, numbers, and underscores (_).')
+                .addLabel('Password'),
             email: Joi.string()
                 .email()
-                .label('Email')
+                .addLabel('Email')
         },
         params: {
             id: Joi.number().integer().options({ convert: true })
