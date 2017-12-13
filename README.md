@@ -442,8 +442,6 @@ schema.body;
 
 ### `app.js`
 
-Entry point of your *Express.js* app:
-
 ```javascript
 'use strict';
 const express = require('express');
