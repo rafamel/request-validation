@@ -1,7 +1,6 @@
 'use strict';
-const { parseInput, toEachStrings } = require('../../../lib/validation-schema/operations/parse-input');
-
 const id = (n) => `[${ String(n) }] `;
+const { parseInput, toEachStrings } = require('../../../../lib/validation-schema/operations/parse-input');
 
 describe(`- parseInput`, () => {
     test(id(1) + `empty & wrong type`, () => {
@@ -30,6 +29,7 @@ describe(`- parseInput`, () => {
                 params: { d: { c: {}, e: { f: {} } } }
             }
         }];
+
         tests.forEach(({ input, output }) => {
             expect(parseInput(input)).toEqual(output);
         });
@@ -64,6 +64,7 @@ describe(`- parseInput`, () => {
                 params: { d: { c: {}, e: { f: {} } } }
             }
         }];
+
         tests.forEach(({ input, output }) => {
             expect(parseInput(input)).toEqual(output);
         });
@@ -96,6 +97,7 @@ describe(`- toEachStrings`, () => {
                 body: ['a.b.c', 'a.c', 'b.a.c', 'a', 'a.b', 'b.a']
             }
         }];
+
         tests.forEach(({ input, output }) => {
             expect(toEachStrings(input)).toEqual(output);
         });
@@ -143,6 +145,7 @@ describe(`- toEachStrings`, () => {
                 body: ['a.b.c', 'a.c', 'b.a.c', 'a', 'a.b', 'b.a']
             }
         }];
+
         tests.forEach(({ input, output }) => {
             expect(toEachStrings(input)).toEqual(output);
         });

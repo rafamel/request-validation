@@ -1,9 +1,8 @@
 'use strict';
+const id = (n) => `[${ String(n) }] `;
 const { mockPresenceKeys } = require('../_setup/joi.mock');
 const Joi = require('joi');
-const { after } = require('../../../lib/validation-schema/operations');
-
-const id = (n) => `[${ String(n) }] `;
+const { after } = require('../../../../lib/validation-schema/operations');
 
 const exBuilt = () => {
     return {
@@ -18,14 +17,14 @@ const exBuilt = () => {
 describe(`- required, optional, forbidden`, () => {
     const all = ['required', 'optional', 'forbidden'];
 
-    test(id(1) + `Throws on non existent parent key`, () => {
+    test(id(1) + `Throw on non existent parent key`, () => {
         const { schema, keys } = exBuilt();
         keys.push('some.more');
         all.forEach(type => {
             expect(() => after[type](keys)(schema)).toThrow();
         });
     });
-    test(id(2), () => {
+    test(id(2) + `Work`, () => {
         const result = {
             body: ['some.other', 'some.other.more', 'some.else', 'other'],
             headers: ['some.other', 'some.else', 'other']
