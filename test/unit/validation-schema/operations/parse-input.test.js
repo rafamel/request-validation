@@ -1,13 +1,13 @@
 'use strict';
 const id = (n) => `[${ String(n) }] `;
-const { parseInput, toEachStrings } = require('../../../../lib/validation-schema/operations/parse-input');
+const { pathTree, stringPaths } = require('../../../../lib/validation-schema/operations/parse-input');
 
-describe(`- parseInput`, () => {
+describe(`- pathTree`, () => {
     test(id(1) + `empty & wrong type`, () => {
-        expect(parseInput()).toEqual({});
-        expect(parseInput({})).toEqual({});
-        expect(parseInput('')).toEqual({});
-        expect(() => parseInput(5)).toThrow();
+        expect(pathTree()).toEqual({});
+        expect(pathTree({})).toEqual({});
+        expect(pathTree('')).toEqual({});
+        expect(() => pathTree(5)).toThrow();
     });
     test(id(2) + `strings`, () => {
         const tests = [{
@@ -31,7 +31,7 @@ describe(`- parseInput`, () => {
         }];
 
         tests.forEach(({ input, output }) => {
-            expect(parseInput(input)).toEqual(output);
+            expect(pathTree(input)).toEqual(output);
         });
     });
     test(id(3) + `objects`, () => {
@@ -66,17 +66,17 @@ describe(`- parseInput`, () => {
         }];
 
         tests.forEach(({ input, output }) => {
-            expect(parseInput(input)).toEqual(output);
+            expect(pathTree(input)).toEqual(output);
         });
     });
 });
 
-describe(`- toEachStrings`, () => {
+describe(`- stringPaths`, () => {
     test(id(1) + `empty`, () => {
-        expect(toEachStrings()).toEqual({});
-        expect(toEachStrings({})).toEqual({});
-        expect(toEachStrings('')).toEqual({});
-        expect(() => toEachStrings(5)).toThrow();
+        expect(stringPaths()).toEqual({});
+        expect(stringPaths({})).toEqual({});
+        expect(stringPaths('')).toEqual({});
+        expect(() => stringPaths(5)).toThrow();
     });
     test(id(2) + `strings`, () => {
         const tests = [{
@@ -99,7 +99,7 @@ describe(`- toEachStrings`, () => {
         }];
 
         tests.forEach(({ input, output }) => {
-            expect(toEachStrings(input)).toEqual(output);
+            expect(stringPaths(input)).toEqual(output);
         });
     });
     test(id(3) + `objects`, () => {
@@ -147,7 +147,7 @@ describe(`- toEachStrings`, () => {
         }];
 
         tests.forEach(({ input, output }) => {
-            expect(toEachStrings(input)).toEqual(output);
+            expect(stringPaths(input)).toEqual(output);
         });
     });
 });

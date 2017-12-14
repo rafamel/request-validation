@@ -1,21 +1,56 @@
 'use strict';
 const id = (n) => `[${ String(n) }] `;
-const { mockConcat, removeMockFns } = require('../../_setup/joi.mock');
-const Joi = require('joi');
 const deep = require('lodash.clonedeep');
-const { concat } = require('../../../../../lib/validation-schema/operations').before;
-const exSchema = require('../../_setup/ex-schema');
+const { concat } = require('../../../../../lib/validation-schema/operations/before');
 
-test(id(1) + `Doesn't mutate previous schema`, () => {
-    const schema = exSchema();
-    const fn = concat({
-        a: Joi.any()
-    });
-    fn(schema, {});
-    expect(schema).toEqual(exSchema());
+// Mocked
+jest.mock('joi');
+const Joi = require('joi');
+const mockConcat = jest.fn(function (other) {
+    this.id = [this.id, other.id];
+    return this;
+});
+let joiMockId = 0;
+Joi.any.mockImplementation(() => ({
+    isJoi: true,
+    id: joiMockId++,
+    concat: mockConcat
+}));
+
+test(id(1) + `Returns function`, () => {
+    expect(typeof concat()).toBe('function');
 });
 
-test(id(2) + `Adds on empty current`, () => {
+test(id(2) + `Doesn't mutate previous schema`, () => {
+    const schema = {
+        a: {
+            a: Joi.any(),
+            b: Joi.any()
+        },
+        b: Joi.any(),
+        c: Joi.any()
+    };
+    concat({ a: Joi.any() })(deep(schema), {});
+    expect(schema).toEqual(schema);
+});
+
+test(id(3) + `Throws when attempting to concat to a non validation`, () => {
+    const toConcat = {
+        a: Joi.any(),
+        c: Joi.any()
+    };
+    const current = {
+        a: {
+            b: Joi.any(),
+            c: Joi.any()
+        },
+        b: Joi.any()
+    };
+
+    expect(() => concat(toConcat)(undefined, current)).toThrow();
+});
+
+test(id(4) + `Adds on empty current`, () => {
     const tests = [{
         a: Joi.any()
     }, {
@@ -34,7 +69,7 @@ test(id(2) + `Adds on empty current`, () => {
     });
 });
 
-test(id(3) + `Maintains in current and concats if exists`, () => {
+test(id(5) + `Maintains in current and concats if exists`, () => {
     const exCurrent = () => ({
         a: {
             b: Joi.any(),
@@ -76,32 +111,17 @@ test(id(3) + `Maintains in current and concats if exists`, () => {
     }];
 
     tests.forEach(({ input, result, calls }) => {
+        mockConcat.mockClear();
+
         const current = exCurrent();
         calls = calls(deep(input));
         result = result(deep(input), deep(current));
         concat(input)(undefined, current);
 
-        removeMockFns([current, result]);
         expect(current).toEqual(result);
         expect(mockConcat).toBeCalled();
         calls.forEach(call => {
             expect(mockConcat).toBeCalledWith(call);
         });
     });
-});
-
-test(id(4) + `Throws when attempting to concat to a non validation`, () => {
-    const fn = concat({
-        a: Joi.any(),
-        c: Joi.any()
-    });
-    const current = {
-        a: {
-            b: Joi.any(),
-            c: Joi.any()
-        },
-        b: Joi.any()
-    };
-
-    expect(() => fn(undefined, current)).toThrow();
 });

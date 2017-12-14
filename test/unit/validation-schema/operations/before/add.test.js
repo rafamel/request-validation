@@ -1,21 +1,28 @@
 'use strict';
 const id = (n) => `[${ String(n) }] `;
-require('../../_setup/joi.mock');
-const Joi = require('joi');
 const deep = require('lodash.clonedeep');
-const { add } = require('../../../../../lib/validation-schema/operations').before;
-const exSchema = require('../../_setup/ex-schema');
+const { add } = require('../../../../../lib/validation-schema/operations/before');
 
-test(id(1) + `Doesn't mutate previous schema`, () => {
+// Mocked
+jest.mock('joi');
+const Joi = require('joi');
+let joiMockId = 0;
+Joi.any.mockImplementation(() => ({ isJoi: true, id: joiMockId++ }));
+
+const exSchema = () => ({ a: { a: { a: 1, b: 2 } }, c: 10 });
+
+test(id(1) + `Returns function`, () => {
+    expect(typeof add()).toBe('function');
+});
+
+test(id(2) + `Doesn't mutate previous schema`, () => {
     const schema = exSchema();
-    const fn = add({
-        a: Joi.any()
-    });
-    fn(schema, {});
+
+    add({ d: Joi.any() })(schema, {});
     expect(schema).toEqual(exSchema());
 });
 
-test(id(2) + `Works with empty current`, () => {
+test(id(3) + `Works with empty current`, () => {
     const tests = [{
         a: Joi.any()
     }, {
@@ -34,7 +41,7 @@ test(id(2) + `Works with empty current`, () => {
     });
 });
 
-test(id(3) + `Maintains in current and overwrites if exists`, () => {
+test(id(4) + `Maintains in current and overwrites if exists`, () => {
     const exCurrent = () => ({
         a: {
             b: Joi.any(),
