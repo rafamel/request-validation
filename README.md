@@ -12,9 +12,8 @@
 
 - Validate the `headers`, `body`, `query`, `params`, and/or `cookies` of a request.
 - Define a base schema and build upon it using only some keys for some routes - you can use it with [*joi-add*](https://github.com/rafamel/joi-add) for an even more flexible design.
-- Access the `request` object inside *Joi* validations.
-- Customize your error catching.
-- Customize the *Joi* options for the validations.
+- [Customize your error catching.](#error-handler)
+- [Customize the *Joi* options for the validations.](#global-options)
 
 [Check out here a full setup example - *joi-add* included](#full-setup-example)
 
