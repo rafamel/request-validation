@@ -82,6 +82,8 @@ rv.handler((err, req, res, next) => {
 });
 ```
 
+Remember that for it to applied on a `RequestValidation`, `new RequestValidation(...)` must be called *after* you define the handler.
+
 ### Global options
 
 Global [*Joi* options](https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-callback) validations will be called with.
@@ -456,11 +458,11 @@ const baseJoi = require('joi');
 require('joi-add')(baseJoi);
 
 // Set request-validation global options (if needed)
-rv.options({
-    params: { presence: required }
-});
+rv.options({ headers: { stripUnknown: false } });
 
 // Set request-validation error handler (if needed)
+// It must be define before we invoque our router and
+// the RequestValidations are built
 rv.handler((err, req, res, next) => {
     // If it's not a Joi error, send to global error handler
     if (!err.isJoi) return next(err);
