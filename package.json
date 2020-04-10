@@ -1,6 +1,6 @@
 {
   "name": "request-validation",
-  "version": "0.1.2",
+  "version": "0.2.0-0",
   "author": "Rafa Mel",
   "description": "Express.js middleware for modular Joi request validations",
   "keywords": [
