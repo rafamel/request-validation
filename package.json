@@ -2,32 +2,7 @@
   "name": "request-validation",
   "version": "0.1.2",
   "author": "Rafa Mel",
-  "description": "Express.js middleware for modular Joi request validations.",
-  "homepage": "https://github.com/rafamel/request-validation",
-  "main": "./lib/index",
-  "scripts": {
-    "lint": "eslint ./lib --ext .js",
-    "lint:test": "eslint ./test --ext .js",
-    "lint:md": "markdownlint *.md --config markdown.json",
-    "test": "npm run lint:test && jest ./test/.*.test.js --runInBand",
-    "test:watch": "nodemon --watch test --exec \"clear && npm t\"",
-    "test:unit": "jest ./test/unit/.*.test.js --runInBand",
-    "test:integration": "jest ./test/integration/.*.test.js --runInBand",
-    "test:e2e": "jest ./test/e2e/.*.test.js --runInBand",
-    "checks": "run-s lint lint:* && jest ./test/.*.test.js --runInBand && npm outdated",
-    "prepublishOnly": "npm run checks",
-    "update:packages": "rm -rf node_modules && rm package-lock.json && npm update --save/save-dev && npm install && npm outdated"
-  },
-  "contributors": [
-    {
-      "name": "Rafa Mel"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/rafamel/request-validation"
-  },
-  "license": "MIT",
+  "description": "Express.js middleware for modular Joi request validations",
   "keywords": [
     "joi",
     "express",
@@ -39,52 +14,72 @@
     "modular",
     "schema"
   ],
+  "engines": {
+    "node": ">=12"
+  },
+  "main": "pkg/dist/index.js",
+  "types": "pkg/dist/index.d.ts",
+  "scripts": {
+    "commit": "kpo commit --",
+    "semantic": "kpo semantic --",
+    "fix": "kpo fix --",
+    "fix:scripts": "kpo fix:scripts --",
+    "lint": "kpo lint --",
+    "lint:md": "kpo lint:md --",
+    "lint:scripts": "kpo lint:scripts --",
+    "clean": "kpo clean --",
+    "clean:build": "kpo clean:build --",
+    "clean:modules": "kpo clean:modules --",
+    "prepublishOnly": "kpo prepublishOnly --",
+    "preversion": "kpo preversion --",
+    "version": "kpo version --",
+    "build": "kpo build --",
+    "build:transpile": "kpo build:transpile --",
+    "build:types": "kpo build:types --",
+    "fix:code": "kpo fix:code --",
+    "lint:code": "kpo lint:code --",
+    "lint:types": "kpo lint:types --",
+    "test": "kpo test --",
+    "verify": "kpo verify --",
+    "validate": "kpo validate --",
+    "docs": "kpo docs --",
+    "build:pack": "kpo build:pack --",
+    "build:static": "kpo build:static --",
+    "release": "kpo release --",
+    "watch": "kpo watch --",
+    "watch:test": "kpo watch:test --"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/rafamel/request-validation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rafamel/request-validation"
+  },
   "bugs": {
     "url": "https://github.com/rafamel/request-validation/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/rafamel/request-validation/raw/master/LICENSE"
-    }
-  ],
   "devDependencies": {
-    "@types/jest": "^21.1.8",
-    "@types/joi": "^13.0.3",
-    "body-parser": "^1.18.2",
-    "cookie-parser": "^1.4.3",
-    "coveralls": "^3.0.0",
-    "eslint": "^4.13.1",
-    "eslint-config-standard": "^11.0.0-beta.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jest": "^21.5.0",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "express": "^4.16.2",
-    "jest-cli": "^22.0.3",
-    "markdownlint-cli": "^0.5.0",
-    "nodemon": "^1.13.3",
-    "npm-run-all": "^4.1.1",
-    "supertest": "^3.0.0"
+    "@pika/pack": "^0.4.0",
+    "@riseup/library": "^0.5.0",
+    "@riseup/tooling": "^0.5.0",
+    "@types/jest": "^25.2.1",
+    "cookie-parser": "^1.4.5",
+    "coveralls": "^3.0.7",
+    "express": "^4.17.1",
+    "husky": "^4.2.5",
+    "kpo": "^0.11.1",
+    "onchange": "^6.0.0",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
-    "joi": "^13.0.2",
+    "joi": "^14.3.1",
     "lodash.clone": "^4.5.0",
     "lodash.clonedeep": "^4.5.0",
-    "lodash.merge": "^4.6.0"
+    "lodash.merge": "^4.6.2"
   },
-  "engines": {
-    "node": ">=8.0.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "lib/**/*.{js,jsx}"
-    ],
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/test/"
-    ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "kpo verify"
+    }
   }
 }

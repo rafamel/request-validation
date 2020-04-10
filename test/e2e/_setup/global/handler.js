@@ -1,14 +1,14 @@
 const router = require('express').Router();
 const Joi = require('joi');
-const { RequestValidation } = require('../../../../lib');
+const { RequestValidation } = require('../../../../src');
 const data = require('../data');
 
 const validate = new RequestValidation({
-    handler: {
-        body: Joi.object().keys({
-            some: Joi.any().required()
-        })
-    }
+  handler: {
+    body: Joi.object().keys({
+      some: Joi.any().required()
+    })
+  }
 });
 
 router.post('/handler', validate.handler, data);

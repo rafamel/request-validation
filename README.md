@@ -1,25 +1,26 @@
 # request-validation
 
-[![Version](https://img.shields.io/github/package-json/v/rafamel/request-validation.svg)](https://github.com/rafamel/request-validation)
-[![Build Status](https://travis-ci.org/rafamel/request-validation.svg)](https://travis-ci.org/rafamel/request-validation)
-[![Coverage](https://img.shields.io/coveralls/rafamel/request-validation.svg)](https://coveralls.io/github/rafamel/request-validation)
-[![Dependencies](https://david-dm.org/rafamel/request-validation/status.svg)](https://david-dm.org/rafamel/request-validation)
-[![Vulnerabilities](https://snyk.io/test/npm/request-validation/badge.svg)](https://snyk.io/test/npm/request-validation)
-[![Issues](https://img.shields.io/github/issues/rafamel/request-validation.svg)](https://github.com/rafamel/request-validation/issues)
+[![Version](https://img.shields.io/npm/v/request-validation.svg)](https://www.npmjs.com/package/request-validation)
+[![Build Status](https://img.shields.io/travis/rafamel/request-validation/master.svg)](https://travis-ci.org/rafamel/request-validation)
+[![Coverage](https://img.shields.io/coveralls/rafamel/request-validation/master.svg)](https://coveralls.io/github/rafamel/request-validation)
+[![Dependencies](https://img.shields.io/david/rafamel/request-validation.svg)](https://david-dm.org/rafamel/request-validation)
+[![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/request-validation.svg)](https://snyk.io/test/npm/request-validation)
 [![License](https://img.shields.io/github/license/rafamel/request-validation.svg)](https://github.com/rafamel/request-validation/blob/master/LICENSE)
 
-**[*Express.js*](https://github.com/expressjs/expressjs.com) middleware for modular [*Joi*](https://github.com/hapijs/joi) request validations.**
-
-- Validate the `headers`, `body`, `query`, `params`, and/or `cookies` of a request.
-- Define a base schema and build upon it using only some keys for some routes - you can use it with [*joi-add*](https://github.com/rafamel/joi-add) for an even more flexible design.
-- [Customize your error catching.](#error-handler)
-- [Customize the *Joi* options for the validations.](#global-options)
-
-[Check out here a full setup example - *joi-add* included](#full-setup-example)
+> [*Express.js*](https://github.com/expressjs/expressjs.com) middleware for modular [*Joi*](https://github.com/hapijs/joi) request validations.
 
 ## Install
 
 [`npm install request-validation`](https://www.npmjs.com/package/request-validation)
+
+## Use Cases
+
+* Validate the `headers`, `body`, `query`, `params`, and/or `cookies` of a request.
+* Define a base schema and build upon it using only some keys for some routes - you can use it with [*joi-add*](https://github.com/rafamel/joi-add) for an even more flexible design.
+* [Customize your error catching.](#error-handler)
+* [Customize the *Joi* options for the validations.](#global-options)
+
+[Check out here a full setup example - *joi-add* included](#full-setup-example)
 
 ## Simple usage
 
@@ -32,18 +33,18 @@ const { RequestValidation } = require('request-validation');
 
 // Create validation for routes as Joi schemas
 const myValidation = new RequestValidation({
-    create: {
-        body: Joi.object().keys({
-            username: Joi.string().required(),
-            password: Joi.string().required()
-        })
-    },
-    patch: {
-        body: Joi.object().keys({
-            username: Joi.string(),
-            password: Joi.string()
-        })
-    }
+  create: {
+    body: Joi.object().keys({
+      username: Joi.string().required(),
+      password: Joi.string().required()
+    })
+  },
+  patch: {
+    body: Joi.object().keys({
+      username: Joi.string(),
+      password: Joi.string()
+    })
+  }
 });
 
 // Add validation middleware to each route
@@ -70,14 +71,14 @@ Otherwise, if you wish to handle this errors directly, you can use `.handler()`;
 ```javascript
 const rv = require('request-validation');
 rv.handler((err, req, res, next) => {
-    // If it's not a Joi error, sent to app error handler
-    if (!err.isJoi) return next(err);
-    // Only show Joi innermost message from the error array
-    const innerMessage = err.details[0].message;
-    res.status(400).json({
-        status: 'error',
-        message: innerMessage
-    });
+  // If it's not a Joi error, sent to app error handler
+  if (!err.isJoi) return next(err);
+  // Only show Joi innermost message from the error array
+  const innerMessage = err.details[0].message;
+  res.status(400).json({
+    status: 'error',
+    message: innerMessage
+  });
 });
 ```
 
@@ -90,9 +91,9 @@ Global [*Joi* options](https://github.com/hapijs/joi/blob/master/API.md#validate
 ```javascript
 const rv = require('request-validation');
 rv.options({
-    defaults: { presence: 'required' },
-    body: { presence: 'optional' },
-    params: { allowUnknown: false }
+  defaults: { presence: 'required' },
+  body: { presence: 'optional' },
+  params: { allowUnknown: false }
 });
 ```
 
@@ -118,10 +119,10 @@ The options inheritance tree, from least to most priority, is:
 
 *Class:* `new RequestValidation(routes, options)`
 
-- `routes`: *Object* with a key for each route, defining either:
-    - A [`ValidationSchema`](#validationschema),
-    - An *object* with keys `headers`, `body`, `query`, `params`, and/or `cookies`, containing a *Joi* validation for each.
-- `options` (optional): *Object,* with the same format as the [global options](#global-options), taking priority over them.
+* `routes`: *Object* with a key for each route, defining either:
+  * A [`ValidationSchema`](#validationschema),
+  * An *object* with keys `headers`, `body`, `query`, `params`, and/or `cookies`, containing a *Joi* validation for each.
+* `options` (optional): *Object,* with the same format as the [global options](#global-options), taking priority over them.
 
 ```javascript
 const router = require('express').Router();
@@ -129,24 +130,24 @@ const Joi = require('joi');
 const { RequestValidation } = require('request-validation');
 
 const myValidation = new RequestValidation({
-    create: {
-        body: Joi.object().keys({
-            username: Joi.string(),
-            password: Joi.string()
-        })
-    },
-    patch: {
-        body: Joi.object().keys({
-            username: Joi.string().optional(),
-            password: Joi.string().optional()
-        }),
-        params: {
-            id: Joi.number().integer()
-        }
+  create: {
+    body: Joi.object().keys({
+      username: Joi.string(),
+      password: Joi.string()
+    })
+  },
+  patch: {
+    body: Joi.object().keys({
+      username: Joi.string().optional(),
+      password: Joi.string().optional()
+    }),
+    params: {
+      id: Joi.number().integer()
     }
+  }
 }, {
-    defaults: { presence: 'required' },
-    params: { convert: true }
+  defaults: { presence: 'required' },
+  params: { convert: true }
 });
 
 router.post('/myRoute', myValidation.create, myController.create);
@@ -161,7 +162,7 @@ Blueprint to build each of your routes validations without repeating yourself. I
 
 *Class:* `new ValidationSchema(schema)`
 
-- `schema`: *Object* with keys `'headers'`, `'body'`, `'query'`, `'params'`, and/or `'cookies'`, each containing an innner *object* with the *Joi* validations we'll build upon for each route.
+* `schema`: *Object* with keys `'headers'`, `'body'`, `'query'`, `'params'`, and/or `'cookies'`, each containing an innner *object* with the *Joi* validations we'll build upon for each route.
 
 As an example of `ValidationSchema` and `RequestValidation` in action:
 
@@ -171,35 +172,35 @@ const Joi = require('joi');
 const { ValidationSchema, RequestValidation } = require('request-validation');
 
 const schema = new ValidationSchema({
-    body: {
-        username: Joi.string()
-            .min(4).max(16)
-            .regex(/^[a-zA-Z0-9_]+$/)
-            .label('Username'),
-        password: Joi.string()
-            .min(8).max(20)
-            .regex(/^[a-zA-Z0-9_]+$/)
-            .label('Password'),
-        email: Joi.string()
-            .email()
-            .label('Email')
-    },
-    params: {
-        id: Joi.number().integer().options({ convert: true })
-    }
+  body: {
+    username: Joi.string()
+      .min(4).max(16)
+      .regex(/^[a-zA-Z0-9_]+$/)
+      .label('Username'),
+    password: Joi.string()
+      .min(8).max(20)
+      .regex(/^[a-zA-Z0-9_]+$/)
+      .label('Password'),
+    email: Joi.string()
+      .email()
+      .label('Email')
+  },
+  params: {
+    id: Joi.number().integer().options({ convert: true })
+  }
 });
 
 const validate = new RequestValidation({
-    create: schema.useBody(),
-    login: schema.useBody('username', 'password'),
-    show: schema.useParams(),
-    update: schema.presenceBody('optional'),
-    patch: {
-        body: schema.presenceBody('optional').body,
-        params: schema.useParams('id').params,
-    }
+  create: schema.useBody(),
+  login: schema.useBody('username', 'password'),
+  show: schema.useParams(),
+  update: schema.presenceBody('optional'),
+  patch: {
+    body: schema.presenceBody('optional').body,
+    params: schema.useParams('id').params,
+  }
 }, {
-    defaults: { presence: 'required' }
+  defaults: { presence: 'required' }
 });
 
 // Add validation middleware to each route
@@ -224,32 +225,32 @@ It's totally up to you to adopt a more explicit style declaring the fields to us
 
 All methods but `.clear()` are aliased for `'headers'`, `'body'`, `'query'`, `'params'`, and `'cookies'`. So for each `.method()`, all of `.methodHeaders()`, `.methodBody()`, `.methodQuery()`, `.methodParams()`, and `.methodCookies()` will exist in such way that calling:
 
-- `.methodBody(arguments)` will be equivalent to calling `.method({ body: arguments })`, and
-- `.methodBody()` to `.method('body')`
+* `.methodBody(arguments)` will be equivalent to calling `.method({ body: arguments })`, and
+* `.methodBody()` to `.method('body')`
 
 #### Standard key path arguments
 
 `ValidationSchema` methods that take standard key path arguments (`standardKeyPath`) to define the keys they should be applied to can take:
 
-- Dot separated string for each key path as:
-    - separate arguments
-    - an *array*
-- Object, with the innermost key containing:
-    - a *string*
-    - an *array of strings*
+* Dot separated string for each key path as:
+  * separate arguments
+  * an *array*
+* Object, with the innermost key containing:
+  * a *string*
+  * an *array of strings*
 
 As an example, if for this schema:
 
 ```javascript
 const schema = new ValidationSchema({
-    body: {
-        username: ...,
-        password: ...,
-        email: ...
-    },
-    params: {
-        id: ...
-    }
+  body: {
+    username: ...,
+    password: ...,
+    email: ...
+  },
+  params: {
+    id: ...
+  }
 });
 ```
 
@@ -267,7 +268,7 @@ schema.methodBody('username').methodParams();
 
 It will exclusively select the properties (including their children, if any) to use from a schema. Whenever `.use()` is called, the resulting schema will only have the properties selected by it. If `.use()` is never called on the chain, all properties will be selected. [It's aliased for each request property.](#aliases)
 
-- `standardKeyPath`: The paths for the keys to use as any of the [standard key path arguments.](#standard-key-path-arguments)
+* `standardKeyPath`: The paths for the keys to use as any of the [standard key path arguments.](#standard-key-path-arguments)
 
 All these would be equivalent and maintain all `'params'` validations and only the `'username'` validation for `'body'` from the parent schema:
 
@@ -283,7 +284,7 @@ Be careful, as all inner keys of any selected property will be included. As an e
 
 It will remove properties from a schema. [It's aliased for each request property.](#aliases)
 
-- `standardKeyPath`: The paths for the keys to skip as any of the [standard key path arguments.](#standard-key-path-arguments)
+* `standardKeyPath`: The paths for the keys to skip as any of the [standard key path arguments.](#standard-key-path-arguments)
 
 All these would be equivalent and remove keys `'password'` and `'email'` from the schema `'body'`:
 
@@ -297,21 +298,21 @@ schema.skipBody('password', 'email');
 
 It will add keys to a previously defined schema. If a key where a *Joi* validation lives already exists in the previous schema, it will replace it. [It's aliased for each request property.](#aliases)
 
-- `addSchema`: New schema with the keys to add.
+* `addSchema`: New schema with the keys to add.
 
 These will replace the `'username'` validation for a new one and add a new `'bio'` validation. They are equivalent:
 
 ```javascript
 schema.add({
-    body: {
-        username: Joi.string().min(6).max(16).label('Username'),
-        bio: Joi.string().max(1200).label('Bio')
-    }
+  body: {
+    username: Joi.string().min(6).max(16).label('Username'),
+    bio: Joi.string().max(1200).label('Bio')
+  }
 });
 
 schema.addBody({
-    username: Joi.string().min(6).max(16).label('Username'),
-    bio: Joi.string().max(1200).label('Bio')
+  username: Joi.string().min(6).max(16).label('Username'),
+  bio: Joi.string().max(1200).label('Bio')
 });
 ```
 
@@ -328,21 +329,21 @@ Because in this case the schema will need to be built twice and it's a little to
 
 It will concatenate a *Joi* validation to a previously existing validation via [Joi.any().concat()](https://github.com/hapijs/joi/blob/master/API.md#anyconcatschema). If a key doesn't exist in the previously defined schema, it will add it. [It's aliased for each request property.](#aliases)
 
-- `concatSchema`: New schema with the keys to concatenate/merge.
+* `concatSchema`: New schema with the keys to concatenate/merge.
 
 These will run the previous `'username'` validation in addition to the new one we're defining, and add a new `'bio'` validation. They are equivalent:
 
 ```javascript
 schema.concat({
-    body: {
-        username: Joi.string().min(6),
-        bio: Joi.string().max(1200).label('Bio')
-    }
+  body: {
+    username: Joi.string().min(6),
+    bio: Joi.string().max(1200).label('Bio')
+  }
 });
 
 schema.concatBody({
-    username: Joi.string().min(6),
-    bio: Joi.string().max(1200).label('Bio')
+  username: Joi.string().min(6),
+  bio: Joi.string().max(1200).label('Bio')
 });
 ```
 
@@ -350,7 +351,7 @@ schema.concatBody({
 
 It will require specific keys on a schema. [It's aliased for each request property.](#aliases)
 
-- `standardKeyPath`: The paths for the keys to required as any of the [standard key path arguments.](#standard-key-path-arguments)
+* `standardKeyPath`: The paths for the keys to required as any of the [standard key path arguments.](#standard-key-path-arguments)
 
 All these would be equivalent and require keys `'username'` and `'password'` from the schema `'body'`:
 
@@ -372,41 +373,41 @@ Same as `.required()` and `.optional()` but sets keys to forbidden. [It's aliase
 
 Sets *Joi* validation options. [It's aliased for each request property.](#aliases)
 
-- `opts`: *Object,* with the same format as the [global options](#global-options) and [`RequestValidation` options](#requestvalidation), taking priority over them.
+* `opts`: *Object,* with the same format as the [global options](#global-options) and [`RequestValidation` options](#requestvalidation), taking priority over them.
 
 These will set the `'presence'` for `'body'` to `'required'`, and to `'optional'` for all others. They are equivalent:
 
 ```javascript
 schema.options({
-    defaults: { presence: 'optional' },
-    body: { presence: 'required' }
+  defaults: { presence: 'optional' },
+  body: { presence: 'required' }
 });
 
 schema.options({ defaults: { presence: 'optional' } })
-    .optionsBody({ presence: 'required' });
+  .optionsBody({ presence: 'required' });
 ```
 
 #### `schema.presence(presence)`
 
 Sets *Joi* validation option for presence which will apply to all keys that don't have a explicit presence requirement set. It's shorthand for `schema.options({ presence: ... })`. [It's aliased for each request property.](#aliases)
 
-- `presence`: Can be either:
-    - A *string* to set as defaults, with value `'required'`, `'optional'`, or `'forbidden'`.
-    - An *object* with keys `'defaults'`, `'headers'`, `'body'`, `'query'`, `'params'`, and/or `'cookies'`, containing a *string* with value `'required'`, `'optional'`, or `'forbidden'` for each.
+* `presence`: Can be either:
+  * A *string* to set as defaults, with value `'required'`, `'optional'`, or `'forbidden'`.
+  * An *object* with keys `'defaults'`, `'headers'`, `'body'`, `'query'`, `'params'`, and/or `'cookies'`, containing a *string* with value `'required'`, `'optional'`, or `'forbidden'` for each.
 
 These will set the `'presence'` of all to `'optional'`, but `'body'`, which will be `'required'`. They are equivalent:
 
 ```javascript
 schema.presence({
-    defaults: 'optional',
-    body: 'required'
+  defaults: 'optional',
+  body: 'required'
 });
 
 schema.presence('optional')
-    .presence({ body: 'required' });
+  .presence({ body: 'required' });
 
 schema.presence('optional')
-    .presenceBody('required');
+  .presenceBody('required');
 ```
 
 #### `schema.clear()`
@@ -463,36 +464,36 @@ rv.options({ headers: { stripUnknown: false } });
 // It must be define before we invoque our router and
 // the RequestValidations are built
 rv.handler((err, req, res, next) => {
-    // If it's not a Joi error, send to global error handler
-    if (!err.isJoi) return next(err);
-    // Show Joi innermost message from the error array as message
-    // if it's a joi-add exmplicitly set message or label,
-    // otherwise, show 'Bad Request'
-    const details = err.details[0];
-    const message = (details.context.isExplicit || details.context.addLabel)
-        ? details.message
-        : 'Bad Request';
-    res.status(400).json({
-        status: 'error',
-        message: message,
-        full: err.message
-    });
+  // If it's not a Joi error, send to global error handler
+  if (!err.isJoi) return next(err);
+  // Show Joi innermost message from the error array as message
+  // if it's a joi-add exmplicitly set message or label,
+  // otherwise, show 'Bad Request'
+  const details = err.details[0];
+  const message = (details.context.isExplicit || details.context.addLabel)
+    ? details.message
+    : 'Bad Request';
+  res.status(400).json({
+    status: 'error',
+    message: message,
+    full: err.message
+  });
 });
 
 // 404
 app.use((req, res, next) => {
-    return res.status(404).json({
-        status: 'error',
-        message: 'Not Found'
-    });
+  return res.status(404).json({
+    status: 'error',
+    message: 'Not Found'
+  });
 });
 
 // Global error handler
 app.use((err, req, res, next) => {
-    res.status(500).json({
-        status: 'error',
-        message: err.message
-    });
+  res.status(500).json({
+    status: 'error',
+    message: err.message
+  });
 });
 
 const app = express();
@@ -523,43 +524,43 @@ const Joi = require('joi-add')();
 const { ValidationSchema, RequestValidation } = require('request-validation');
 
 const schema = new ValidationSchema({
-    body: {
-        username: Joi.string()
-            .min(4).max(16)
-            .add((it) => it.regex(/^[a-zA-Z0-9_]+$/),
-                'Username should only contain letters, numbers, and underscores (_).')
-            .addLabel('Username'),
-        password: Joi.string()
-            .min(8).max(20)
-            .add((it) => it.regex(/^[a-zA-Z0-9_]+$/),
-                'Password should only contain letters, numbers, and underscores (_).')
-            .addLabel('Password'),
-        email: Joi.string()
-            .email()
-            .addLabel('Email')
-    },
-    params: {
-        id: Joi.number().integer().options({ convert: true })
-    }
+  body: {
+    username: Joi.string()
+      .min(4).max(16)
+      .add((it) => it.regex(/^[a-zA-Z0-9_]+$/),
+        'Username should only contain letters, numbers, and underscores (_).')
+      .addLabel('Username'),
+    password: Joi.string()
+      .min(8).max(20)
+      .add((it) => it.regex(/^[a-zA-Z0-9_]+$/),
+        'Password should only contain letters, numbers, and underscores (_).')
+      .addLabel('Password'),
+    email: Joi.string()
+      .email()
+      .addLabel('Email')
+  },
+  params: {
+    id: Joi.number().integer().options({ convert: true })
+  }
 });
 
 module.exports = new RequestValidation({
-    create: schema
-        .useBody('username', 'password', 'email')
-        .presence('required'),
-    login: schema
-        .useBody('username', 'password')
-        .presence('required'),
-    show: schema
-        .useParams('id')
-        .presence('required'),
-    update: schema.use({
-        body: ['username', 'password', 'email'],
-        params: 'id'
-    }),
-    patch: schema.use({
-        body: ['username', 'password', 'email'],
-        params: 'id'
-    })
+  create: schema
+    .useBody('username', 'password', 'email')
+    .presence('required'),
+  login: schema
+    .useBody('username', 'password')
+    .presence('required'),
+  show: schema
+    .useParams('id')
+    .presence('required'),
+  update: schema.use({
+    body: ['username', 'password', 'email'],
+    params: 'id'
+  }),
+  patch: schema.use({
+    body: ['username', 'password', 'email'],
+    params: 'id'
+  })
 });
 ```

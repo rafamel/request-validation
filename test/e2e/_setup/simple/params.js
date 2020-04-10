@@ -1,25 +1,29 @@
 const router = require('express').Router();
 const Joi = require('joi');
-const { RequestValidation } = require('../../../../lib');
+const { RequestValidation } = require('../../../../src');
 const data = require('../data');
 
 const validate = new RequestValidation({
-    base: {
-        params: Joi.object().keys({
-            some: Joi.string().valid('4').required()
-        })
-    },
-    unbuilt: {
-        params: {
-            some: Joi.string().valid('4').required()
-        }
-    },
-    mutates: {
-        params: Joi.object().keys({
-            some: Joi.number().options({ convert: true }),
-            other: Joi.string().default('a default string')
-        })
+  base: {
+    params: Joi.object().keys({
+      some: Joi.string()
+        .valid('4')
+        .required()
+    })
+  },
+  unbuilt: {
+    params: {
+      some: Joi.string()
+        .valid('4')
+        .required()
     }
+  },
+  mutates: {
+    params: Joi.object().keys({
+      some: Joi.number().options({ convert: true }),
+      other: Joi.string().default('a default string')
+    })
+  }
 });
 
 router.get('/base/:some', validate.base, data);
